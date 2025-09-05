@@ -48,11 +48,15 @@ func saveUserInfo(user User) error {
 	fmt.Printf("Writting file for user ID: %d\n", user.ID)
 
 	filename := fmt.Sprintf("logs/uid_%d.txt", user.ID)
-	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 600)
 	if err != nil {
 		return err
 	}
-	file.WriteString(user.getActivityInfo())
+	defer file.Close()
+	_,err = file.WriteString(user.getActivityInfo());
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
